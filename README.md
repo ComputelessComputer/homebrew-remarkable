@@ -1,49 +1,100 @@
 # remarkable
 
-Rust CLI for syncing reMarkable documents to a local folder.
+Sync your reMarkable tablet to a local folder.
+
+## Install
+
+```bash
+brew tap ComputelessComputer/remarkable
+brew install remarkable
+```
+
+## Quick start
+
+```bash
+remarkable auth login   # connect your tablet (one-time)
+remarkable sync         # sync documents to ~/remarkable-notes
+```
+
+---
 
 ## Commands
 
-```bash
-remarkable init
-remarkable sync [--force] [--dry-run]
-remarkable status
-remarkable reset [--auth]
-```
+### `remarkable auth login`
 
-Running `remarkable` without a subcommand starts `init` when the device is not registered and `sync` when it is.
+Connect your reMarkable tablet for the first time.
+
+Opens the reMarkable registration page, prompts you for the one-time code, and stores a device token in `~/.config/remarkable/auth.toml`. You only need to do this once.
+
+### `remarkable auth refresh`
+
+Renew your device token without re-registering. Use this if syncing starts returning authentication errors.
+
+### `remarkable auth logout`
+
+Disconnect the device and delete the stored token. After this, run `remarkable auth login` to reconnect.
+
+---
+
+### `remarkable sync`
+
+Download new and changed documents from the reMarkable cloud to your local sync folder.
+
+Documents are saved as PDF by default, preserving the folder structure from your tablet. Only changed documents are downloaded — unchanged ones are skipped.
+
+**Flags:**
+
+- `--force` — re-download all documents, even unchanged ones
+- `--dry-run` — show what would sync without downloading anything
+
+---
+
+### `remarkable status`
+
+Show whether the device is connected, when it was last synced, how many documents were synced, and where they're saved.
+
+---
+
+### `remarkable reset`
+
+Clear the sync state so the next `sync` re-downloads everything.
+
+**Flags:**
+
+- `--auth` — also delete the device token (full disconnect, same as `auth logout`)
+
+---
+
+### Default behavior
+
+Running `remarkable` with no subcommand:
+- Runs `auth login` if no device token is stored
+- Runs `sync` if a device token exists
+
+---
 
 ## Config
 
-The CLI stores state in `~/.config/remarkable/`:
-
-```text
-~/.config/remarkable/config.toml
-~/.config/remarkable/auth.toml
-~/.config/remarkable/state.toml
-```
-
-Default `config.toml`:
+Stored in `~/.config/remarkable/config.toml`. Created automatically on first run with defaults.
 
 ```toml
 sync_folder = "~/remarkable-notes"
-output_format = "pdf"
+output_format = "pdf"    # or "markdown"
 ```
 
-`output_format` may be `pdf` or `markdown`.
+**`sync_folder`** — where documents are saved. Supports `~`.
 
-## Sync behavior
+**`output_format`** — `pdf` keeps your handwritten pages as-is. `markdown` exports text where available.
 
-- Uses the reMarkable device registration and token refresh APIs.
-- Walks the cloud root tree and resolves documents plus collections.
-- Mirrors collection structure into the local sync folder.
-- Downloads changed documents only, unless `--force` is used.
-- Supports real `--dry-run` output without modifying local files or sync state.
-- Writes a sync log to `<sync_folder>/.sync-log.md`.
-- Stores EPUB and raw `.rm` page files in per-document `attachments/` folders.
+---
 
-## Build
+## Files
 
-```bash
-cargo build --release
 ```
+~/.config/remarkable/
+  auth.toml      # device token
+  config.toml    # your settings
+  state.toml     # sync state (which documents have been downloaded)
+```
+
+The sync folder also gets a `.sync-log.md` with a record of every sync run.
