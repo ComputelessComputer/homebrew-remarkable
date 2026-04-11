@@ -9,19 +9,26 @@ Requires Node.js `>=18`.
 Install globally:
 
 ```bash
+brew tap ComputelessComputer/remarkable-cli
+brew install remarkable
+```
+
+Or via npm:
+
+```bash
 npm install -g remarkable-cli
 ```
 
-Run without installing globally:
+Run without installing:
 
 ```bash
 npx remarkable-cli@latest --help
 ```
 
-If installed globally, the command is:
+The command is:
 
 ```bash
-remarkable-cli
+remarkable
 ```
 
 ## Quick Start
