@@ -4,7 +4,7 @@
   "description": "Sync your reMarkable tablet notes to a local folder",
   "type": "module",
   "bin": {
-    "remarkable-cli": "./dist/cli.js"
+    "remarkable": "./dist/cli.js"
   },
   "files": [
     "dist"
