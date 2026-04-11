@@ -102,7 +102,7 @@ jobs:
         run: |
           test -n "$HOMEBREW_TAP_TOKEN"
           VERSION="${GITHUB_REF_NAME#v}"
-          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/ComputelessComputer/homebrew-remarkable-cli.git" tap
+          git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/ComputelessComputer/homebrew-remarkable.git" tap
           FORMULA="tap/Formula/remarkable.rb"
           URL_BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}"
           cat > "$FORMULA" <<EOF
